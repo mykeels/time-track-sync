@@ -1,10 +1,19 @@
+/// <reference path="./app.config.js" />
+/// <reference path="./socket.js" />
+/// <reference path="./time-tracker.js" />
+/// <reference path="./inactivity-tracker.js" />
+
 const app = new Vue({
     el: '.clock',
     components: { 
         'time-tracker': TimeTracker,
         'inactivity-tracker': InactivityTracker
+    },
+    mounted() {
+        const userId = Number(baseValue('user-id')) || 0
+        this.$on('log-time', () => socket.send(JSON.stringify({ id: userId })))
     }
-})
+});
 
 (function (window, app) {
     window.onfocus = function () {

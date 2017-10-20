@@ -6,4 +6,9 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
+/* GET user page. */
+router.get('/:id', function(req, res, next) {
+  res.render('index', { title: 'Express', id: req.params.id });
+});
+
 module.exports = router;

@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title><%= title %></title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/style.css">
-    <base href="./" />
+    <base href="/" />
+    <base name="user-id" value="<%= id %>" />
+    <link rel="stylesheet" href="./css/min/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/style.css">
   </head>
   <body>
       <div class="container">
@@ -44,20 +45,11 @@
             </ul>
         </center>
     </div>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-    <script>
-      const socket = new WebSocket("ws://localhost:8888");
-      socket.onopen = () => {
-        console.log("socket opening")
-        socket.send("Hello!");
-      }
-      socket.onmessage = (ev) => {
-        console.log(ev)
-      }
-      socket.onclose = (ev) => {
-        console.log("connection closed", ev)
-      }
-    </script>
+    <script type="text/javascript" src="./js/app.config.js"></script>
+    <script type="text/javascript" src="./js/min/vue.min.js"></script>
+    <script type="text/javascript" src="./js/time-tracker.js"></script>
+    <script type="text/javascript" src="./js/inactivity-tracker.js"></script>
+    <script type="text/javascript" src="./js/app.js"></script>
+    <script type="text/javascript" src="./js/socket.js"></script>
   </body>
 </html>

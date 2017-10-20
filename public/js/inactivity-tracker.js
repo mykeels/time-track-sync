@@ -48,7 +48,7 @@ const InactivityTracker = Vue.component('inactivity-tracker', {
         }
     },
     mounted() {
-        this.start()
+        //this.start()
 
         this.$parent.$on('reset', this.reset.bind(this))
     }

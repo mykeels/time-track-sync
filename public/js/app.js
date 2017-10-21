@@ -30,21 +30,3 @@ const app = new Vue({
     }
 });
 
-(function (window, app) {
-    window.onfocus = function () {
-        app.$emit('start');
-        //app.$emit('reset');
-    }
-    
-    window.onblur = function () {
-        console.log('leave')
-        app.$emit('stop');
-    }
-    
-    window.onkeydown = window.onmousemove = 
-    window.onwheel = window.onmousewheel = 
-    window.onmousedown = window.onkeyup = function () {
-        //app.$emit('reset');
-    }
-})(window, app)
-

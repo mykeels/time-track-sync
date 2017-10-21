@@ -5,7 +5,7 @@
     window.onfocus = function () {
         app.$emit('start');
         app.refreshTime();
-        //app.$emit('reset');
+        app.$emit('reset');
     }
     
     window.onblur = function () {
@@ -17,7 +17,7 @@
     window.onkeydown = window.onmousemove = 
     window.onwheel = window.onmousewheel = 
     window.onmousedown = window.onkeyup = function () {
-        //app.$emit('reset');
+        app.$emit('reset');
     }
 })(window, app);
 
@@ -60,6 +60,7 @@
         const listener = (state) => {
             if (state === v) {
                 app.$emit("start");
+                app.$emit('refresh');
                 app.refreshTime();
             }
             else {

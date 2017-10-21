@@ -1,1 +1,1 @@
-const socket = new WebSocket("ws://localhost:8888/time");
+const socket = new WebSocket(`${location.href.replace(/^https?/, 'ws')}time`);

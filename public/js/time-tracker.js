@@ -11,13 +11,13 @@ const TimeTracker = Vue.component('time-tracker', {
             return '0'.repeat(count - $num.length) + $num;
         },
         start() {
-            const STEP = 1000
+            const STEP = 500
 
             if (this.interval) clearInterval(this.interval);
             this.interval = setInterval((function () {
                 this.count++;
-                console.log('tick')
                 if (this.count % 10 === 0) this.$parent.$emit('log-time')
+                else this.$parent.$emit('tick')
             }).bind(this), STEP)
         },
         stop() {

@@ -13,9 +13,9 @@ module.exports = (app) => {
                  * }
                  */
                 if (data.constructor.name === 'Object') {
-                    if (!!Number(data.id)) { //check that [id] is a number
+                    if (!!Number(data.id) || Number(data.id) === 0) { //check that [id] is a number
                         if (data.message === 'update') {
-                            usersTime[Number(data.id)] = (usersTime[Number(data.id)] || 0) + 10 
+                            usersTime[Number(data.id)] = (usersTime[Number(data.id)] || 0) + (Number(data.seconds) || 10)
                             ws.send(usersTime[Number(data.id)])
                         }
                         else if (data.message === 'refresh') {

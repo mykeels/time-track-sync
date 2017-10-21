@@ -7,26 +7,45 @@
 const app = new Vue({
     el: '.clock',
     data: {
-        seconds: 0
+        seconds: 0,
+        untrackedSeconds: 0,
+        socket: socket,
+        userId: Number(baseValue('user-id')) || 0
     },
     components: { 
         'time-tracker': TimeTracker,
         'inactivity-tracker': InactivityTracker,
         'time-display': TimeDisplay
     },
+    methods: {
+        updateTime() {
+            this.socket.send(JSON.stringify({ id: this.userId, message: 'update' }));
+            this.untrackedSeconds = 0; //reset untracked seconds;
+        },
+        updateUntrackedSeconds() {
+            this.socket.send(JSON.stringify({ id: this.userId, message: 'update', seconds: this.untrackedSeconds }));
+            this.untrackedSeconds = 0; //reset untracked seconds;
+        },
+        refreshTime() {
+            if (socket.readyState == socket.OPEN) this.socket.send(JSON.stringify({ id: this.userId, message: 'refresh' }))
+            else console.log("socket is in CONNECTING state")
+        }
+    },
     mounted() {
-        const userId = Number(baseValue('user-id')) || 0
-        this.$on('log-time', () => socket.send(JSON.stringify({ id: userId, message: 'update' })))
+        this.$on('log-time', () => this.updateTime())
+        this.$on('tick', () => this.untrackedSeconds++)
 
         socket.onmessage = (message) => {
             if (!!Number(message.data)) {
                 this.seconds = Number(message.data);
-                
             }
-            console.log(message)
         }
 
-        socket.onopen = () => socket.send(JSON.stringify({ id: userId, message: 'refresh' }))
+        socket.onopen = () => this.refreshTime()
+
+        socket.onclose = (ev) => {
+            console.warn("socket connection has closed", ev)
+        }
     }
 });
 

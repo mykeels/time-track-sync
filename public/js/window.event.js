@@ -4,12 +4,14 @@
 (function (window, app) {
     window.onfocus = function () {
         app.$emit('start');
+        app.refreshTime();
         //app.$emit('reset');
     }
     
     window.onblur = function () {
         console.log('leave')
         app.$emit('stop');
+        app.updateUntrackedSeconds();
     }
     
     window.onkeydown = window.onmousemove = 
@@ -54,16 +56,24 @@
             };
 
         evt = evt || window.event;
+        
+        const listener = (state) => {
+            if (state === v) {
+                app.$emit("start");
+                app.refreshTime();
+            }
+            else {
+                app.$emit("stop");
+                app.updateUntrackedSeconds();
+            }
+            console.log(state);
+        }
+
         if (evt.type in evtMap) {
-            const state = evtMap[evt.type];
-            if (state === v) app.$emit("start");
-            else app.$emit("stop");
-            console.log(state);
+            listener(evtMap[evt.type]);
+            
         } else {
-            const state = this[hidden] ? "hidden" : "visible";
-            if (state === v) app.$emit("start");
-            else app.$emit("stop");
-            console.log(state);
+            listener(this[hidden] ? "hidden" : "visible");
         }
     }
 

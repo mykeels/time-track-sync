@@ -16,6 +16,7 @@ const TimeTracker = Vue.component('time-tracker', {
             if (this.interval) clearInterval(this.interval);
             this.interval = setInterval((function () {
                 this.count++;
+                console.log('tick')
                 if (this.count % 10 === 0) this.$parent.$emit('log-time')
             }).bind(this), STEP)
         },

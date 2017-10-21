@@ -25,6 +25,7 @@ const app = new Vue({
         updateUntrackedSeconds() {
             this.socket.send(JSON.stringify({ id: this.userId, message: 'update', seconds: this.untrackedSeconds }));
             this.untrackedSeconds = 0; //reset untracked seconds;
+            this.$emit('sync-untracked-seconds')
         },
         refreshTime() {
             if (socket.readyState == socket.OPEN) this.socket.send(JSON.stringify({ id: this.userId, message: 'refresh' }))
@@ -33,7 +34,9 @@ const app = new Vue({
     },
     mounted() {
         this.$on('log-time', () => this.updateTime())
-        this.$on('tick', () => this.untrackedSeconds++)
+        this.$on('tick', () => {
+            this.untrackedSeconds++;
+        })
 
         socket.onmessage = (message) => {
             if (!!Number(message.data)) {

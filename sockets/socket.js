@@ -9,17 +9,28 @@ module.exports = (app) => {
                 const data = JSON.parse(message)
                 /**
                  * {
-                 *  "id": 1
+                 *  "id": 1,
+                 *  "patientId": 874
                  * }
                  */
                 if (data.constructor.name === 'Object') {
-                    if (!!Number(data.id) || Number(data.id) === 0) { //check that [id] is a number
+                    if ((!!Number(data.id) || Number(data.id) === 0) &&
+                        (!!Number(data.patientId) || Number(data.patientId) === 0)) { //check that [id] and [patientId] are numbers
+                        const key = `${data.id}-${data.patientId}`;
+                        ws.key = key;
                         if (data.message === 'update') {
-                            usersTime[Number(data.id)] = (usersTime[Number(data.id)] || 0) + (Number(data.seconds) || 10)
-                            ws.send(usersTime[Number(data.id)])
+                            usersTime[key] = usersTime[key] || {
+                                date: new Date(),
+                                sockets: [],
+                                interval: () => Math.floor(((new Date()) - this.date) / 1000)
+                            }
+                            if (usersTime[key].sockets.indexOf(ws) < 0) { //add ws to client sockets list
+                                usersTime[key].sockets.push(ws)
+                            }
+                            ws.send(usersTime[key].interval())
                         }
                         else if (data.message === 'refresh') {
-                            ws.send(usersTime[Number(data.id)])
+                            ws.send(usersTime[key].interval())
                         }
                     }
                     else {
@@ -33,7 +44,11 @@ module.exports = (app) => {
             catch (ex) {
                 console.error("there was an error parsing", message)
             }
-            //console.log(message);
+        })
+
+        ws.on('close', (ev) => {
+            const key = ws.key;
+            if (key) usersTime[key].sockets.splice(usersTime[key].sockets.indexOf(ws), 1);
         })
     })
 }

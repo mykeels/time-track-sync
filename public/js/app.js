@@ -8,43 +8,33 @@ const app = new Vue({
     el: '.clock',
     data: {
         seconds: 0,
-        untrackedSeconds: 0,
         socket: socket,
-        userId: Number(baseValue('user-id')) || 0
+        userId: Number(baseValue('user-id')) || 0,
+        patientId: 0
     },
     components: { 
-        'time-tracker': TimeTracker,
         'inactivity-tracker': InactivityTracker,
         'time-display': TimeDisplay
     },
     methods: {
         updateTime() {
-            this.socket.send(JSON.stringify({ id: this.userId, message: 'update' }));
-            this.untrackedSeconds = 0; //reset untracked seconds;
-        },
-        updateUntrackedSeconds() {
-            this.socket.send(JSON.stringify({ id: this.userId, message: 'update', seconds: this.untrackedSeconds }));
-            this.untrackedSeconds = 0; //reset untracked seconds;
-            this.$emit('sync-untracked-seconds')
-        },
-        refreshTime() {
-            if (socket.readyState == socket.OPEN) this.socket.send(JSON.stringify({ id: this.userId, message: 'refresh' }))
-            else console.log("socket is in CONNECTING state")
+            this.socket.send(JSON.stringify({ id: this.userId, patientId: this.patientId, message: 'update' }));
         }
     },
     mounted() {
-        this.$on('log-time', () => this.updateTime())
+        //this.$on('log-time', () => this.updateTime())
         this.$on('tick', () => {
-            this.untrackedSeconds++;
+            this.seconds++;
         })
-
         socket.onmessage = (message) => {
-            if (!!Number(message.data)) {
-                this.seconds = Number(message.data);
+            if (message.data) {
+                const data = JSON.parse(message.data)
+                this.seconds = Number(data.seconds)
+                console.log(data);
             }
         }
 
-        socket.onopen = () => this.refreshTime()
+        socket.onopen = () => this.updateTime()
 
         socket.onclose = (ev) => {
             console.warn("socket connection has closed", ev)

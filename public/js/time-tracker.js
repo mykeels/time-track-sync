@@ -11,16 +11,12 @@ const TimeTracker = Vue.component('time-tracker', {
             return '0'.repeat(count - $num.length) + $num;
         },
         start() {
-            const STEP = 500
+            const STEP = 1000
 
             if (this.interval) clearInterval(this.interval);
             this.interval = setInterval((function () {
-                this.count++;
-                if (this.count % 10 === 0) {
-                    this.$parent.$emit('log-time')
-                }
-                else this.$parent.$emit('tick')
-                console.log(this.count)
+                this.$parent.$emit("tick")
+                this.count++
             }).bind(this), STEP)
         },
         stop() {
@@ -42,12 +38,9 @@ const TimeTracker = Vue.component('time-tracker', {
         }
     },
     mounted() {
-        //this.start()
+        this.start()
 
         this.$parent.$on('start', this.start.bind(this));
         this.$parent.$on('stop', this.stop.bind(this));
-        this.$parent.$on('sync-untracked-seconds', () => {
-            this.count = 0;
-        })
     }
 })

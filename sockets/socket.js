@@ -22,15 +22,23 @@ module.exports = (app) => {
                             usersTime[key] = usersTime[key] || {
                                 date: new Date(),
                                 sockets: [],
-                                interval: () => Math.floor(((new Date()) - this.date) / 1000)
+                                interval() {
+                                    return Math.floor(((new Date()) - this.date) / 1000)
+                                }
                             }
                             if (usersTime[key].sockets.indexOf(ws) < 0) { //add ws to client sockets list
                                 usersTime[key].sockets.push(ws)
                             }
-                            ws.send(usersTime[key].interval())
+                            ws.send(JSON.stringify({
+                                seconds: usersTime[key].interval(),
+                                clients: usersTime[key].sockets.length
+                            }))
                         }
                         else if (data.message === 'refresh') {
-                            ws.send(usersTime[key].interval())
+                            ws.send(JSON.stringify({
+                                seconds: usersTime[key].interval(),
+                                clients: usersTime[key].sockets.length
+                            }))
                         }
                     }
                     else {
@@ -51,4 +59,16 @@ module.exports = (app) => {
             if (key) usersTime[key].sockets.splice(usersTime[key].sockets.indexOf(ws), 1);
         })
     })
+
+    setInterval(() => {
+        for (const key in usersTime) {
+            console.log("sending message to ", usersTime[key].sockets.length, " clients");
+            usersTime[key].sockets.forEach(socket => {
+                socket.send(JSON.stringify({
+                    seconds: usersTime[key].interval(),
+                    clients: usersTime[key].sockets.length
+                }))
+            })
+        }
+    }, 3000)
 }

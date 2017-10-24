@@ -18,6 +18,19 @@ const TimeDisplay = Vue.component('time-display', {
             count = count || 0;
             const $num = num + '';
             return '0'.repeat(count - $num.length) + $num;
+        },
+        start() {
+            const STEP = 1000;
+            if (this.interval) clearInterval(this.interval);
+            this.interval = setInterval((function () {
+                this.$parent.$emit("tick")
+            }).bind(this), STEP)
+        },
+        stop() {
+            clearInterval(this.interval)
         }
+    },
+    mounted() {
+        this.start()
     }
 })

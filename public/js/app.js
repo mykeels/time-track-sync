@@ -55,7 +55,7 @@ const app = new Vue({
         })
 
         this.$on('stop', () => {
-            this.socket.close()
+            if (this.socket) this.socket.close()
         })
 
         this.$on('start', () => {

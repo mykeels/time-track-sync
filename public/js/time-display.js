@@ -32,5 +32,7 @@ const TimeDisplay = Vue.component('time-display', {
     },
     mounted() {
         this.start()
+        this.$parent.$on('start', this.start.bind(this));
+        this.$parent.$on('stop', this.stop.bind(this));
     }
 })

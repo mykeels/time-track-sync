@@ -8,7 +8,7 @@ const app = new Vue({
     el: '.clock',
     data: {
         seconds: 0,
-        socket: socket,
+        socket: null,
         userId: Number(baseValue('user-id')) || 0,
         patientId: Number(baseValue('patient-id')) || 0
     },
@@ -20,26 +20,49 @@ const app = new Vue({
     methods: {
         updateTime() {
             this.socket.send(JSON.stringify({ id: this.userId, patientId: this.patientId, message: 'update' }));
+        },
+        createSocket() {
+            const self = this; //a way to keep the context
+            this.socket = this.socket || (function () {
+                const socket = new WebSocket(`${location.origin.replace(/^https?/, 'ws')}/time`);
+
+                socket.onmessage = (message) => {
+                    if (message.data) {
+                        const data = JSON.parse(message.data)
+                        this.seconds = Number(data.seconds)
+                        console.log(data);
+                    }
+                }
+        
+                socket.onopen = (ev) => {
+                    console.log("socket connection opened", ev)
+                    self.updateTime()
+                }
+        
+                socket.onclose = (ev) => {
+                    console.warn("socket connection has closed", ev)
+                    self.socket = null;
+                    self.seconds = 0;
+                }
+
+                return socket;
+            })()
         }
     },
     mounted() {
-        //this.$on('log-time', () => this.updateTime())
         this.$on('tick', () => {
             this.seconds++;
         })
-        socket.onmessage = (message) => {
-            if (message.data) {
-                const data = JSON.parse(message.data)
-                this.seconds = Number(data.seconds)
-                console.log(data);
-            }
-        }
 
-        socket.onopen = () => this.updateTime()
+        this.$on('stop', () => {
+            this.socket.close()
+        })
 
-        socket.onclose = (ev) => {
-            console.warn("socket connection has closed", ev)
-        }
+        this.$on('start', () => {
+            this.createSocket();
+        })
+
+        this.createSocket()
     }
 });
 

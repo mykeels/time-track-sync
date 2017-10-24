@@ -14,6 +14,7 @@
   <body>
       <div class="container">
         <center>
+            <h3>You are viewing info for Patient <%= patientId %></h3>
             <div class="clock row">
                 <time-display :seconds="seconds" inline-template>
                     <div>
@@ -29,6 +30,9 @@
                 </inactivity-tracker>
             </div>
             <br>
+            <h3><a href="/patients/1">Patient 1</a></h3>
+            <h3><a href="/patients/2">Patient 2</a></h3>
+            <h3><a href="/patients/3">Patient 3</a></h3>
             <h3>Switch tabs or switch windows while keeping this open and see what happens</h3>
             <br>
             <h3>We can use something similar for time tracking ...</h3>

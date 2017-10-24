@@ -28,6 +28,33 @@
                         <div class="activity-tracker">{{time}}</div>
                     </div>
                 </inactivity-tracker>
+                <modal inline-template>
+                    <div v-if="show">
+                        <transition name="modal">
+                            <div class="modal-mask">
+                                <div class="modal-wrapper">
+                                <div class="modal-container">
+                        
+                                    <div class="modal-header">
+                                        {{title}} <button @click="copyBody">Copy</button>
+                                    </div>
+                        
+                                    <div class="modal-body" v-html="body"></div>
+                        
+                                    <div class="modal-footer">
+                                        <div>
+                                            {{footer}}
+                                        </div>
+                                        <button class="modal-default-button" @click="close">
+                                            OK
+                                        </button>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </transition>
+                    </div>
+                </modal>
             </div>
             <br>
             <h3><a href="/patients/1">Patient 1</a></h3>
@@ -54,6 +81,7 @@
     <script type="text/javascript" src="./js/min/vue.min.js"></script>
     <script type="text/javascript" src="./js/socket.js"></script>
     <script type="text/javascript" src="./js/inactivity-tracker.js"></script>
+    <script type="text/javascript" src="./js/comps/modal.vue.js"></script>
     <script type="text/javascript" src="./js/time-display.js"></script>
     <script type="text/javascript" src="./js/app.js"></script>
     <script type="text/javascript" src="./js/window.event.js"></script>

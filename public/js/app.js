@@ -1,7 +1,7 @@
 /// <reference path="./app.config.js" />
 /// <reference path="./socket.js" />
 /// <reference path="./time-display.js" />
-/// <reference path="./time-tracker.js" />
+/// <reference path="./comps/modal.vue.js" />
 /// <reference path="./inactivity-tracker.js" />
 
 const app = new Vue({
@@ -14,7 +14,8 @@ const app = new Vue({
     },
     components: { 
         'inactivity-tracker': InactivityTracker,
-        'time-display': TimeDisplay
+        'time-display': TimeDisplay,
+        'modal': Modal
     },
     methods: {
         updateTime() {

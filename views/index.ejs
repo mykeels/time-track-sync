@@ -1,24 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title><%= title %></title>
+    <title>
+        <%= title %>
+    </title>
     <base href="/" />
     <base name="user-id" value="874" />
     <base name="patient-id" value="<%= patientId %>" />
     <link rel="stylesheet" href="./css/min/bootstrap.min.css">
     <link rel="stylesheet" href="./css/style.css">
-  </head>
-  <body>
-      <div class="container">
+</head>
+
+<body>
+    <div class="container">
         <center>
             <h3>
-                You are viewing info for Patient <%= patientId %>
+                You are viewing info for Patient
+                <%= patientId %>
             </h3>
             <div class="clock row">
-                <span class="paused" v-if="!socket">(Paused)</span>
+                <span class="paused" v-if="!socket">(Connection Closed)</span>
                 <time-display :seconds="seconds" inline-template>
                     <div>
                         <h3>Time Display</h3>
@@ -36,23 +41,23 @@
                         <transition name="modal">
                             <div class="modal-mask">
                                 <div class="modal-wrapper">
-                                <div class="modal-container">
-                        
-                                    <div class="modal-header">
-                                        {{title}} <button @click="copyBody">Copy</button>
-                                    </div>
-                        
-                                    <div class="modal-body" v-html="body"></div>
-                        
-                                    <div class="modal-footer">
-                                        <div>
-                                            {{footer}}
+                                    <div class="modal-container">
+
+                                        <div class="modal-header">
+                                            {{title}} <button @click="copyBody">Copy</button>
                                         </div>
-                                        <button class="modal-default-button" @click="close">
+
+                                        <div class="modal-body" v-html="body"></div>
+
+                                        <div class="modal-footer">
+                                            <div>
+                                                {{footer}}
+                                            </div>
+                                            <button class="modal-default-button" @click="close">
                                             OK
                                         </button>
+                                        </div>
                                     </div>
-                                </div>
                                 </div>
                             </div>
                         </transition>
@@ -88,5 +93,6 @@
     <script type="text/javascript" src="./js/time-display.js"></script>
     <script type="text/javascript" src="./js/app.js"></script>
     <script type="text/javascript" src="./js/window.event.js"></script>
-  </body>
+</body>
+
 </html>

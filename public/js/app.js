@@ -29,7 +29,8 @@ const app = new Vue({
                 socket.onmessage = (message) => {
                     if (message.data) {
                         const data = JSON.parse(message.data)
-                        this.seconds = Number(data.seconds)
+                        if (!!Number(data.seconds))
+                            self.seconds = Number(data.seconds)
                         console.log(data);
                     }
                 }
@@ -42,7 +43,6 @@ const app = new Vue({
                 socket.onclose = (ev) => {
                     console.warn("socket connection has closed", ev)
                     self.socket = null;
-                    self.seconds = 0;
                 }
 
                 return socket;
@@ -52,14 +52,16 @@ const app = new Vue({
     mounted() {
         this.$on('tick', () => {
             this.seconds++;
+            this.$forceUpdate()
         })
 
         this.$on('stop', () => {
-            if (this.socket) this.socket.close()
+            if (this.socket) this.socket.send(JSON.stringify({ id: this.userId, patientId: this.patientId, message: 'stop' }))
         })
 
         this.$on('start', () => {
-            this.createSocket();
+            if (this.socket && this.socket.readyState === WebSocket.OPEN) 
+                this.socket.send(JSON.stringify({ id: this.userId, patientId: this.patientId, message: 'start' }))
         })
 
         this.createSocket()

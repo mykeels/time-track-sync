@@ -14,8 +14,11 @@
   <body>
       <div class="container">
         <center>
-            <h3>You are viewing info for Patient <%= patientId %></h3>
+            <h3>
+                You are viewing info for Patient <%= patientId %>
+            </h3>
             <div class="clock row">
+                <span class="paused" v-if="!socket">(Paused)</span>
                 <time-display :seconds="seconds" inline-template>
                     <div>
                         <h3>Time Display</h3>

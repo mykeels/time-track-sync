@@ -34,10 +34,16 @@ module.exports = (app) => {
                                 clients: usersTime[key].sockets.length
                             }))
                         }
-                        else if (data.message === 'refresh') {
+                        else if (data.message === 'stop') {
+                            ws.clientState = 'stopped';
                             ws.send(JSON.stringify({
-                                seconds: usersTime[key].interval(),
-                                clients: usersTime[key].sockets.length
+                                message: 'ws stopped'
+                            }))
+                        }
+                        else if (data.message === 'start') {
+                            ws.clientState = null;
+                            ws.send(JSON.stringify({
+                                message: 'ws started'
                             }))
                         }
                     }
@@ -64,10 +70,12 @@ module.exports = (app) => {
         for (const key in usersTime) {
             console.log("sending message to ", usersTime[key].sockets.length, " clients");
             usersTime[key].sockets.forEach(socket => {
-                socket.send(JSON.stringify({
-                    seconds: usersTime[key].interval(),
-                    clients: usersTime[key].sockets.length
-                }))
+                if (socket.clientState != 'stopped') {
+                    socket.send(JSON.stringify({
+                        seconds: usersTime[key].interval(),
+                        clients: usersTime[key].sockets.length
+                    }))
+                }
             })
         }
     }, 3000)

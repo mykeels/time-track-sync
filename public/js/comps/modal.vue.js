@@ -10,6 +10,7 @@ const Modal = Vue.component('modal', {
     methods: {
         close() {
             this.show = false;
+            this.$parent.$emit('modal:hide', this.data)
         }
     },
     computed: {

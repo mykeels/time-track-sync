@@ -23,10 +23,17 @@ module.exports = app => {
             ws.key = key;
             if (data.message === "update") {
               usersTime[key] = usersTime[key] || {
-                date: new Date(),
+                dates: [
+                  {
+                    start: new Date(),
+                    end: null
+                  }
+                ],
                 sockets: [],
                 interval() {
-                  return Math.floor((new Date() - this.date) / 1000);
+                  return Math.floor(this.dates.map(date => {
+                    return (date.end || new Date()) - date.start;
+                  }).reduce((a, b) => a + b) / 1000);
                 }
               };
               if (usersTime[key].sockets.indexOf(ws) < 0) {
@@ -40,6 +47,8 @@ module.exports = app => {
                 })
               );
             } else if (data.message === "stop") {
+              const key = ws.key;
+              usersTime[key].dates[usersTime[key].dates.length - 1].end = new Date();
               ws.clientState = "stopped";
               ws.send(
                 JSON.stringify({
@@ -47,6 +56,11 @@ module.exports = app => {
                 })
               );
             } else if (data.message === "start") {
+              const key = ws.key;
+              usersTime[key].dates.push({
+                start: new Date(),
+                end: null
+              });
               ws.clientState = null;
               ws.send(
                 JSON.stringify({

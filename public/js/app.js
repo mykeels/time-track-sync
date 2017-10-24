@@ -10,7 +10,7 @@ const app = new Vue({
         seconds: 0,
         socket: socket,
         userId: Number(baseValue('user-id')) || 0,
-        patientId: 0
+        patientId: Number(baseValue('patient-id')) || 0
     },
     components: { 
         'inactivity-tracker': InactivityTracker,

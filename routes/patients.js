@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
 
 /* GET user page. */
 router.get('/:id', function(req, res, next) {
-  res.render('index', { title: 'Express', id: req.params.id });
+  res.render('index', { title: 'Express', patientId: req.params.id });
 });
 
 module.exports = router;

@@ -22,31 +22,39 @@ const app = new Vue({
             this.socket.send(JSON.stringify({ id: this.userId, patientId: this.patientId, message: 'update' }));
         },
         createSocket() {
-            const self = this; //a way to keep the context
-            this.socket = this.socket || (function () {
-                const socket = new WebSocket(`${location.origin.replace(/^https?/, 'ws')}/time`);
-
-                socket.onmessage = (message) => {
-                    if (message.data) {
-                        const data = JSON.parse(message.data)
-                        if (!!Number(data.seconds))
-                            self.seconds = Number(data.seconds)
-                        console.log(data);
+            try {
+                const self = this; //a way to keep the context
+                this.socket = this.socket || (function () {
+                    const socket = new WebSocket(`${location.origin.replace(/^https?/, 'ws')}/time`);
+    
+                    socket.onmessage = (message) => {
+                        if (message.data) {
+                            const data = JSON.parse(message.data)
+                            if (!!Number(data.seconds))
+                                self.seconds = Number(data.seconds)
+                            console.log(data);
+                        }
                     }
-                }
-        
-                socket.onopen = (ev) => {
-                    console.log("socket connection opened", ev)
-                    self.updateTime()
-                }
-        
-                socket.onclose = (ev) => {
-                    console.warn("socket connection has closed", ev)
-                    self.socket = null;
-                }
+            
+                    socket.onopen = (ev) => {
+                        console.log("socket connection opened", ev)
+                        self.updateTime()
+                    }
+            
+                    socket.onclose = (ev) => {
+                        console.warn("socket connection has closed", ev)
+                        self.socket = null;
+                        self.$emit("stop");
 
-                return socket;
-            })()
+                        setTimeout(self.createSocket.bind(self), 3000);
+                    }
+    
+                    return socket;
+                })()
+            }
+            catch (ex) {
+                console.error(ex);
+            }
         }
     },
     mounted() {

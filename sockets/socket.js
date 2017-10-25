@@ -31,9 +31,11 @@ module.exports = app => {
                 ],
                 sockets: [],
                 interval() {
-                  return Math.floor(this.dates.map(date => {
+                  //console.log(this.dates)
+                  const seconds = Math.floor(this.dates.map(date => {
                     return (date.end || new Date()) - date.start;
                   }).reduce((a, b) => a + b) / 1000);
+                  return seconds;
                 }
               };
               if (usersTime[key].sockets.indexOf(ws) < 0) {
@@ -93,7 +95,7 @@ module.exports = app => {
         usersTime[key].sockets.filter(
           socket => socket.clientState !== "stopped"
         ).length,
-        " clients"
+        " clients", usersTime[key].interval()
       );
       usersTime[key].sockets.forEach(socket => {
         if (socket.clientState != "stopped") {

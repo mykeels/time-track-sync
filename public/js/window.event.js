@@ -5,11 +5,13 @@
     window.onfocus = function () {
         app.$emit('start');
         app.$emit('reset');
+        app.$emit('start-inactivity-tracking');
     }
     
     window.onblur = function () {
         console.log('leave')
         app.$emit('stop');
+        app.$emit("stop-inactivity-tracking");
     }
     
     window.onkeydown = window.onmousemove = 
@@ -59,9 +61,11 @@
             if (state === v) {
                 app.$emit("start");
                 app.$emit('refresh');
+                app.$emit('start-inactivity-tracking');
             }
             else {
                 app.$emit("stop");
+                app.$emit("stop-inactivity-tracking");
             }
             console.log(state);
         }

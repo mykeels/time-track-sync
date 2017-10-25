@@ -17,15 +17,19 @@ const InactivityTracker = Vue.component("inactivity-tracker", {
       this.interval = setInterval(
         function() {
           this.endTime = new Date();
-          const ALERT_INTERVAL = 10;
+          const ALERT_INTERVAL = 60;
           if (this.seconds >= ALERT_INTERVAL) {
-            this.stop();
-            this.$parent.$emit("stop");
-            alert(
-              `${ALERT_INTERVAL} seconds have elapsed since your last activity`
-            );
-            this.start();
-            this.reset();
+            if (!this.alertIsActive) {
+              this.$parent.$emit("stop");
+              this.alertIsActive = true;
+              alert(
+                `${ALERT_INTERVAL} seconds have elapsed since your last activity`
+              );
+              this.alertIsActive = false;
+              this.$parent.$emit("start");
+              
+              this.reset();
+            }
           }
         }.bind(this),
         1000
@@ -65,7 +69,7 @@ const InactivityTracker = Vue.component("inactivity-tracker", {
     this.start();
 
     this.$parent.$on("reset", this.reset.bind(this));
-    this.$parent.$on("stop", this.stop.bind(this));
-    this.$parent.$on("start", this.start.bind(this));
+    this.$parent.$on("stop-inactivity-tracking", this.stop.bind(this));
+    this.$parent.$on("start-inactivity-tracking", this.start.bind(this));
   }
 });

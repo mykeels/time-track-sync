@@ -39,6 +39,10 @@ module.exports = app => {
                   return this.seconds + seconds;
                 },
                 cleanup() {
+                  /**
+                   * remove objects with start and end data properties from [dates] array
+                   * so it doesn't get bulky and make .interval() take longer than necessary
+                   */
                   this.seconds += Math.floor(this.dates.filter(date => date.start && date.end)
                                               .map(date => date.end - date.start)
                                               .reduce((a, b) => a + b, 0) / 1000);

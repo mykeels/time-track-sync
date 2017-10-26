@@ -61,7 +61,7 @@ module.exports = app => {
               );
             } else if (data.message === "stop") {
               const key = ws.key;
-              usersTime[key].dates[usersTime[key].dates.length - 1].end = new Date();
+              if (usersTime[key].dates[usersTime[key].dates.length - 1]) usersTime[key].dates[usersTime[key].dates.length - 1].end = new Date();
               usersTime[key].cleanup();
               ws.clientState = "stopped";
               ws.send(

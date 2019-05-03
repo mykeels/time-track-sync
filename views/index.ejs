@@ -6,21 +6,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>
-        <%= title %>
+        <%= title %> - Time Track Sync
     </title>
     <base href="/" />
-    <base name="user-id" value="874" />
-    <base name="patient-id" value="<%= patientId %>" />
+    <base name="key" value="<%= key %>" />
     <link rel="stylesheet" href="./css/min/bootstrap.min.css">
     <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/modal.vue.css">
 </head>
 
 <body>
     <div class="container">
         <center>
+            <h1>
+                Time Track Sync
+            </h1>
+            <p>
+                An attempt to track active time across multiple instances of a web page
+            </p>
             <h3>
-                You are viewing info for Patient
-                <%= patientId %>
+                You are viewing info for user {{info.key}}
             </h3>
             <div class="clock row">
                 <span class="paused" v-if="!socket">(Connection Closed)</span>
@@ -28,12 +33,34 @@
                     <div>
                         <h3>Time Display</h3>
                         <div class="time-display">{{time}}</div>
+                        <br>
+                        <h3>Open this page in multiple tabs/windows and watch the time sync</h3>
+                        <h3><a href="./1" target="_blank">Open New Window for User 1</a></h3>
+                        <h3><a href="./2" target="_blank">Open New Window for User 2</a></h3>
+                        <h3><a href="./3" target="_blank">Open New Window for User 3</a></h3>
                     </div>
                 </time-display>
                 <inactivity-tracker inline-template>
                     <div>
                         <h3>Inactivity Tracker</h3>
                         <div class="activity-tracker">{{time}}</div>
+                        <h3>Inactivity Tracker will show a modal after {{ALERT_TIMEOUT}} seconds without:</h3>
+                        <ul>
+                            <li>window.onfocus</li>
+                            <li>window.onkeydown</li>
+                            <li>window.onmousemove</li>
+                            <li>window.onwheel</li>
+                            <li>window.onmousewheel</li>
+                            <li>window.onmousedown</li>
+                            <li>window.onkeyup</li>
+                        </ul>
+                        <p>
+                            The modal will be displayed at the right time, even if you are away from this page, 
+                            as long as the page is open on your browser
+                        </p>
+                        <h3>
+                            If you have {{LOGOUT_TIMEOUT}} seconds of inactivity, you will be logged out.
+                        </h3>
                     </div>
                 </inactivity-tracker>
                 <modal inline-template>
@@ -44,7 +71,7 @@
                                     <div class="modal-container">
 
                                         <div class="modal-header">
-                                            {{title}} <button @click="copyBody">Copy</button>
+                                            {{title}}
                                         </div>
 
                                         <div class="modal-body" v-html="body"></div>
@@ -53,9 +80,9 @@
                                             <div>
                                                 {{footer}}
                                             </div>
-                                            <button class="modal-default-button" @click="close">
-                                            OK
-                                        </button>
+                                            <button class="modal-default-button" @click="close(true)">
+                                                OK
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -64,34 +91,16 @@
                     </div>
                 </modal>
             </div>
-            <br>
-            <h3><a href="/patients/1">Patient 1</a></h3>
-            <h3><a href="/patients/2">Patient 2</a></h3>
-            <h3><a href="/patients/3">Patient 3</a></h3>
-            <h3>Switch tabs or switch windows while keeping this open and see what happens</h3>
-            <br>
-            <h3>We can use something similar for time tracking ...</h3>
-            <br>
-            <h3>Inactivity Tracker will reset on:</h3>
-            <ul>
-                <li>onfocus</li>
-                <li>onkeydown</li>
-                <li>onmousemove</li>
-                <li>onwheel</li>
-                <li>onmousewheel</li>
-                <li>onmousedown</li>
-                <li>onkeyup</li>
-                <li>15 seconds elapsed since last activity</li>
-            </ul>
         </center>
     </div>
     <script type="text/javascript" src="./js/app.config.js"></script>
     <script type="text/javascript" src="./js/min/vue.min.js"></script>
-    <script type="text/javascript" src="./js/socket.js"></script>
+    <script type="text/javascript" src="./js/event-bus.js"></script>
     <script type="text/javascript" src="./js/inactivity-tracker.js"></script>
     <script type="text/javascript" src="./js/comps/modal.vue.js"></script>
     <script type="text/javascript" src="./js/time-display.js"></script>
-    <script type="text/javascript" src="./js/app.js"></script>
+    <script type="text/javascript" src="./js/window-startup-time.js"></script>
+    <script type="text/javascript" src="./js/index.js"></script>
     <script type="text/javascript" src="./js/window.event.js"></script>
 </body>
 

@@ -1,18 +1,32 @@
 {
-  "name": "sockets-demo",
-  "version": "0.0.0",
+  "name": "time-track-sync",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "start-dev": "nodemon ./bin/www",
+    "test": "mocha -R spec --recursive ./tests",
+    "watch-test": "npm run test --  --watch",
+    "coverage": "nyc mocha ./tests",
+    "watch-coverage": "nodemon --exec npm run coverage"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "body-parser": "~1.18.2",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "ejs": "~2.5.7",
     "express": "~4.15.5",
+    "express-swagger-ui": "^0.1.0",
     "express-ws": "^3.0.0",
     "morgan": "~1.9.0",
     "serve-favicon": "~2.4.5"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^6.1.2",
+    "nodemon": "^1.17.3",
+    "nyc": "^11.7.1",
+    "swagger-jsdoc": "^1.9.7"
   }
 }

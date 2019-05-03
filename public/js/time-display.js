@@ -23,7 +23,7 @@ const TimeDisplay = Vue.component('time-display', {
             const STEP = 1000;
             if (this.interval) clearInterval(this.interval);
             this.interval = setInterval((function () {
-                this.$parent.$emit("tick")
+                EventBus.$emit("tracker:tick")
             }).bind(this), STEP)
         },
         stop() {
@@ -32,7 +32,7 @@ const TimeDisplay = Vue.component('time-display', {
     },
     mounted() {
         this.start()
-        this.$parent.$on('start', this.start.bind(this));
-        this.$parent.$on('stop', this.stop.bind(this));
+        EventBus.$on('tracker:start', this.start.bind(this));
+        EventBus.$on('tracker:stop', this.stop.bind(this));
     }
 })

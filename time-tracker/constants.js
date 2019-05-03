@@ -1,0 +1,2 @@
+module.exports.DEFAULT_ALERT_TIMEOUT = 60
+module.exports.DEFAULT_LOGOUT_TIMEOUT = 120

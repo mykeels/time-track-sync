@@ -1,30 +1,32 @@
 /**
  * Detect window.onfocus and window.onblur
  */
-(function (window, app) {
-    window.onfocus = function () {
-        app.$emit('start');
-        app.$emit('reset');
-        app.$emit('start-inactivity-tracking');
+const BindWindowFocusChange = function (window, App = EventBus) {
+    window.onfocus = function (e) {
+        App.$emit('tracker:start', e);
+        App.$emit('inactivity:reset', e);
+        App.$emit('inactivity:start', e);
+        App.isInFocus = true;
     }
     
     window.onblur = function () {
         console.log('leave')
-        app.$emit('stop');
-        app.$emit("stop-inactivity-tracking");
+        App.$emit('tracker:stop');
+        App.$emit("inactivity:stop");
+        App.isInFocus = false;
     }
     
     window.onkeydown = window.onmousemove = 
     window.onwheel = window.onmousewheel = 
     window.onmousedown = window.onkeyup = function () {
-        app.$emit('reset');
+        App.$emit('inactivity:reset');
     }
-})(window, app);
+}
 
 /**
  * Detect window visibility change
  */
-(function(window, document, app) {
+const BindWindowVisibilityChange = function(window, document, App = EventBus) {
     var hidden = "hidden";
 
     // Standards:
@@ -59,13 +61,15 @@
         
         const listener = (state) => {
             if (state === v) {
-                app.$emit("start");
-                app.$emit('refresh');
-                app.$emit('start-inactivity-tracking');
+                App.$emit('tracker:start');
+                App.$emit('inactivity:reset');
+                App.$emit('inactivity:start');
+                App.isInFocus = true;
             }
             else {
-                app.$emit("stop");
-                app.$emit("stop-inactivity-tracking");
+                App.$emit('tracker:stop');
+                App.$emit("inactivity:stop");
+                App.isInFocus = false;
             }
             console.log(state);
         }
@@ -83,4 +87,7 @@
         onchange({
             type: document[hidden] ? "blur" : "focus"
         });
-})(window, document, app);
+}
+
+BindWindowFocusChange(window)
+BindWindowVisibilityChange(window, document)

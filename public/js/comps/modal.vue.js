@@ -1,3 +1,5 @@
+/// <reference path="../event-bus.js" />
+
 const Modal = Vue.component('modal', {
     data() {
         return {
@@ -8,20 +10,24 @@ const Modal = Vue.component('modal', {
         }
     },
     methods: {
-        close() {
+        close(ev) {
             this.show = false;
-            this.$parent.$emit('modal:hide', this.data)
+            if (ev) EventBus.$emit('modal:close:event')
         }
     },
     computed: {
         
     },
     mounted() {
-        this.$parent.$on('modal:show', (modal) => {
+        EventBus.$on('modal:show', (modal) => {
             this.title = modal.title || '';
             this.body = modal.body || '';
             this.footer = modal.footer || '';
             this.show = true;
+        })
+
+        EventBus.$on('modal:close', () => {
+            this.close()
         })
     }
 })
